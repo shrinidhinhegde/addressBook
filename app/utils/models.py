@@ -8,3 +8,5 @@ class Address(Base):
     id = Column(String, primary_key=True, index=True)
     lat = Column(Float)
     lng = Column(Float)
+    createdAt = Column(String)
+    updatedAt = Column(String)

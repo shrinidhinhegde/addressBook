@@ -8,6 +8,7 @@ from app.utils import database_config, models
 from app.utils.error_responses import error_responses
 from app.utils.input_schemas import CreateAddressSchema, UpdateAddressSchema
 from app.utils.output_schemas import AddressSchema
+from app.utils.time_functions import current_utc_time
 from app.utils.validators import validate_coordinates_validator, address_exists, is_within_radius, \
     validate_radius
 
@@ -22,7 +23,8 @@ async def create_address(data: CreateAddressSchema, db: Session = Depends(databa
     The Latitude and Longitude is validated using depends on the router using validate_coordinates.
     """
     new_address_id = str(uuid.uuid4())
-    new_address = models.Address(id=new_address_id, **data.dict())
+    current_time = current_utc_time()
+    new_address = models.Address(id=new_address_id, createdAt=current_time, updatedAt=current_time, **data.dict())
     db.add(new_address)
     db.commit()
     return new_address
@@ -64,6 +66,7 @@ async def update_address_by_id(address_id: str, data: UpdateAddressSchema,
     excluded_dict = data.dict()
     for attr, value in excluded_dict.items():
         setattr(address, attr, value)
+    address.updatedAt = current_utc_time()
     db.commit()
     return address
 
