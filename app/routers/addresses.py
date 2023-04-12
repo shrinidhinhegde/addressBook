@@ -9,7 +9,7 @@ from app.utils.error_responses import error_responses
 from app.utils.input_schemas import CreateAddressSchema, UpdateAddressSchema
 from app.utils.output_schemas import AddressSchema
 from app.utils.validators import validate_coordinates_validator, address_exists, is_within_radius, \
-    validate_coordinates, validate_radius
+    validate_radius
 
 addresses_router = APIRouter(prefix='/addresses', tags=['addresses'])
 
@@ -89,7 +89,7 @@ def get_addresses_within_radius(lat: float, lng: float, radius: float, db: Sessi
     Function to search for addresses within a radius. This function is called when a GET request is made to the
     /addresses/search endpoint.
     """
-    validate_coordinates(lat, lng)
+    validate_coordinates_validator(CreateAddressSchema(lat=lat, lng=lng))
     addresses = db.query(models.Address).all()
 
     # Filter the results to include only addresses within the given radius

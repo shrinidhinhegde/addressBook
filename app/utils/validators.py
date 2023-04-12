@@ -7,17 +7,13 @@ from app.utils import models, database_config
 from app.utils.input_schemas import CreateAddressSchema
 
 
-def validate_coordinates(lat, lng):
-    if not (-90 <= lat <= 90) or not (-180 <= lng <= 180):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="Latitude must be between -90 and 90, and longitude must be between -180 and 180")
-
-
 def validate_coordinates_validator(data: CreateAddressSchema):
     """
     Validator Function to validate the latitude and longitude of an address.
     """
-    validate_coordinates(data.lat, data.lng)
+    if not (-90 <= data.lat <= 90) or not (-180 <= data.lng <= 180):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Latitude must be between -90 and 90, and longitude must be between -180 and 180")
 
 
 def validate_radius(request: Request):
